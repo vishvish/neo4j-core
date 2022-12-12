@@ -7,6 +7,8 @@ gemspec
 
 gem 'tins', '< 1.7' if RUBY_VERSION.to_f < 2.0
 
+gem 'neo4j-rake_tasks', github: 'vishvish/neo4j-rake_tasks', branch: 'master'
+
 group 'development' do
   if RUBY_PLATFORM =~ /java/
     gem 'neo4j-ruby-driver', path: '../neo4j-ruby-driver' if ENV['USE_LOCAL_DRIVER']

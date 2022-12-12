@@ -41,7 +41,6 @@ DESCRIPTION
   s.add_dependency('typhoeus', '>= 1.1.2')
 
   s.add_development_dependency('dryspec')
-  s.add_development_dependency('neo4j-rake_tasks', '>= 0.3.0')
   s.add_development_dependency('pry')
   s.add_development_dependency('simplecov')
   s.add_development_dependency('yard')
