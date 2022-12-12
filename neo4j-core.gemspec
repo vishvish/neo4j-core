@@ -20,9 +20,9 @@ DESCRIPTION
 
   s.require_path = 'lib'
   s.files = Dir.glob('{bin,lib,config}/**/*') + %w[README.md Gemfile neo4j-core.gemspec]
-  s.has_rdoc = true
-  s.extra_rdoc_files = %w[README.md]
-  s.rdoc_options = ['--quiet', '--title', 'Neo4j::Core', '--line-numbers', '--main', 'README.rdoc', '--inline-source']
+  # s.has_rdoc = true
+  # s.extra_rdoc_files = %w[README.md]
+  # s.rdoc_options = ['--quiet', '--title', 'Neo4j::Core', '--line-numbers', '--main', 'README.rdoc', '--inline-source']
   s.metadata = {
     'homepage_uri' => 'http://neo4jrb.io/',
     'changelog_uri' => 'https://github.com/neo4jrb/neo4j-core/blob/master/CHANGELOG.md',
@@ -30,14 +30,14 @@ DESCRIPTION
     'bug_tracker_uri' => 'https://github.com/neo4jrb/neo4j-core/issues'
   }
 
-  s.add_dependency('activesupport', '>= 4.0')
+  s.add_dependency('activesupport', '>= 7.0')
   s.add_dependency('faraday', '>= 0.9.0')
   s.add_dependency('faraday_middleware', '>= 0.10.0')
   s.add_dependency('faraday_middleware-multi_json')
   s.add_dependency('httpclient')
   s.add_dependency('json')
   s.add_dependency('multi_json')
-  s.add_dependency('net_tcp_client', '>= 2.0.1')
+  s.add_dependency('net_tcp_client', '>= 2.2.0')
   s.add_dependency('typhoeus', '>= 1.1.2')
 
   s.add_development_dependency('dryspec')

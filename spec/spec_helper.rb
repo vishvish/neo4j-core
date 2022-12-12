@@ -89,11 +89,7 @@ module Neo4jSpecHelpers
     options = {}
     options[:logger_level] = Logger::DEBUG if ENV['DEBUG']
 
-    cert_store = OpenSSL::X509::Store.new
-    cert_path = ENV.fetch('TLS_CERTIFICATE_PATH', './db/neo4j/development/certificates/neo4j.cert')
-    cert_store.add_file(cert_path)
-    options[:ssl] = {cert_store: cert_store}
-    # options[:ssl] = false
+    options[:ssl] = false
 
     Neo4j::Core::CypherSession::Adaptors::Bolt.new(url, options.merge(extra_options))
   end

@@ -25,10 +25,10 @@ module Neo4j
           def initialize(url, options = {})
             self.url = url
             @options = options
-            @net_tcp_client_options = {read_timeout: options.fetch(:read_timeout, -1),
-                                       write_timeout: options.fetch(:write_timeout, -1),
-                                       connect_timeout: options.fetch(:connect_timeout, 10),
-                                       ssl: options.fetch(:ssl, {})}
+            @net_tcp_client_options = { read_timeout: options.fetch(:read_timeout, -1),
+                                        write_timeout: options.fetch(:write_timeout, -1),
+                                        connect_timeout: options.fetch(:connect_timeout, 10),
+                                        ssl: options.fetch(:ssl, {}) }
 
             open_socket
           end
@@ -115,12 +115,17 @@ module Neo4j
           end
 
           def open_socket
-            @tcp_client = Net::TCPClient.new(@net_tcp_client_options.merge(buffered: false, server: "#{host}:#{port}"))
+            @tcp_client = Net::TCPClient.new(
+              servers: ["#{host}:#{port}"]
+            )
+
+            # @net_tcp_client_options.merge(buffered: false, server: "#{host}:#{port}"))
           rescue Errno::ECONNREFUSED => e
             raise Neo4j::Core::CypherSession::ConnectionFailedError, e.message
           end
 
           GOGOBOLT = "\x60\x60\xB0\x17"
+
           def handshake
             log_message :C, :handshake, nil
 
@@ -203,25 +208,28 @@ module Neo4j
             end
 
             unpacker = PackStream::Unpacker.new(StringIO.new(chunk))
-            [].tap { |r| while arg = unpacker.unpack_value!; r << arg; end }
+            [].tap { |r|
+              while arg = unpacker.unpack_value!;
+                r << arg;
+              end }
           end
 
           # Represents messages sent to or received from the server
           class Message
             TYPE_CODES = {
               # client message types
-              init: 0x01,             # 0000 0001 // INIT <user_agent>
-              ack_failure: 0x0E,      # 0000 1110 // ACK_FAILURE
-              reset: 0x0F,            # 0000 1111 // RESET
-              run: 0x10,              # 0001 0000 // RUN <statement> <parameters>
-              discard_all: 0x2F,      # 0010 1111 // DISCARD *
-              pull_all: 0x3F,         # 0011 1111 // PULL *
+              init: 0x01, # 0000 0001 // INIT <user_agent>
+              ack_failure: 0x0E, # 0000 1110 // ACK_FAILURE
+              reset: 0x0F, # 0000 1111 // RESET
+              run: 0x10, # 0001 0000 // RUN <statement> <parameters>
+              discard_all: 0x2F, # 0010 1111 // DISCARD *
+              pull_all: 0x3F, # 0011 1111 // PULL *
 
               # server message types
-              success: 0x70,          # 0111 0000 // SUCCESS <metadata>
-              record: 0x71,           # 0111 0001 // RECORD <value>
-              ignored: 0x7E,          # 0111 1110 // IGNORED <metadata>
-              failure: 0x7F           # 0111 1111 // FAILURE <metadata>
+              success: 0x70, # 0111 0000 // SUCCESS <metadata>
+              record: 0x71, # 0111 0001 // RECORD <value>
+              ignored: 0x7E, # 0111 1110 // IGNORED <metadata>
+              failure: 0x7F # 0111 1111 // FAILURE <metadata>
             }.freeze
 
             CODE_TYPES = TYPE_CODES.invert
@@ -270,8 +278,8 @@ module Neo4j
               if value.is_a?(Array) && (1..3).cover?(value[0])
                 case value[0]
                 when 1
-                  {type: :node, identity: value[1],
-                   labels: value[2], properties: value[3]}
+                  { type: :node, identity: value[1],
+                    labels: value[2], properties: value[3] }
                 end
               else
                 value

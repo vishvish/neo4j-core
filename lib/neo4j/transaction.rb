@@ -1,5 +1,6 @@
+require "active_support/all"
 require 'active_support/core_ext/module/delegation'
-require 'active_support/per_thread_registry'
+require 'active_support/core_ext/module/attribute_accessors_per_thread'
 
 module Neo4j
   module Transaction
@@ -7,9 +8,7 @@ module Neo4j
 
     # Provides a simple API to manage transactions for each session in a thread-safe manner
     class TransactionsRegistry
-      extend ActiveSupport::PerThreadRegistry
-
-      attr_accessor :transactions_by_session_id
+      thread_mattr_accessor :transactions_by_session_id
     end
 
     class Base
